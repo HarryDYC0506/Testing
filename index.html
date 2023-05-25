@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wandering Soul</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.js" integrity="sha512-H05oT7BAjM9Ai1IaFX9zr61NtE2e1P0MkTz3AZXBnseaJSAOt2FGMFJ+vVGutaJxEGA1jxUiYsTBYQNE08/Erw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        class Studio extends Phaser.Scene {
+            constructor() {
+                super('studio');
+            }
+            preload(){
+                this.load.image('HStudio', 'assets/H Studio Logo.png')
+                this.load.audio('jingle', 'assets/Studio Jingle.mp3')
+            }
+            create() {
+                this.sound.add('jingle', {
+                    loop: false,
+                    volume: 0.8
+                }).play();
+                this.add.sprite(320, 250, 'HStudio').setScale(0.1);
+
+                this.cameras.main.once('camerafadeincomplete', function (camera) {camera.fadeOut(2000);});
+                this.cameras.main.fadeIn(2000);
+                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+		            this.scene.start('warning')
+	            })
+                //this.input.on('pointerdown', () => this.scene.start('body'));
+            }
+        }
+
+        class Warning extends Phaser.Scene {
+            constructor() {
+                super('warning');
+            }
+                create() {
+
+                    this.cameras.main.fadeIn(2000);
+
+                    let warnTitle = this.add.text(30, 150,"PHOTOSENSITIVITY WARNING", {
+                        fontSize: '40px',
+                        color: '#f00'
+                    });
+                let box = this.add.text(65, 200,
+`A small percentage of people might experience seizure
+when exposed to lights and flashes.
+Please proceed with cautions.`,
+                    {
+                        align:'center',
+                    }
+                );
+
+                let click = this.add.text(200, 300,
+                'Click anywhere to start')
+
+
+                
+                // let thing = this.add.circle(150, 150, 100, 0xff0000);
+                // this.add.tween({
+                //     targets: thing,
+                //     scale: {from: 0, to: 1},
+                //     duration: 1000
+                // });
+
+                this.input.on('pointerdown', () => 
+                    this.cameras.main.fadeOut(2000, 255,255,255)
+                )
+
+                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+		            this.scene.start('menu')
+	            })
+
+                // this.time.delayedCall(5000, () => {
+                //     this.scene.start('studio');
+                // })
+
+                //this.input.on('pointerdown', () => this.scene.start('studio'));
+            }
+        }
+
+        class Menu extends Phaser.Scene {
+            constructor() {
+                super('menu');
+            }
+            preload(){
+                this.load.image('logo', 'assets/WS Logo.png')
+                this.load.image('pic', 'assets/Le River.jpg')
+                this.load.audio('theme', 'assets/Menu Theme.mp3')
+            }
+            create() {
+                this.sound.add('theme', {
+                    loop: true,
+                    volume: 1
+                }).play();
+                this.cameras.main.fadeIn(1000, 255, 255, 255);
+                this.cameras.main.setBackgroundColor('#FFFFFF');
+                this.add.sprite(500, 250, 'pic').setScale(0.124);
+                this.add.sprite(130, 100, 'logo').setScale(0.1);
+
+                let sub = this.add.text(10, 180,
+`Follow the wind wherever it leads you,
+for you don’t have, but crave for a destination……`,
+                {
+                    color: '#000',
+                    fontFamily: 'Shadows Into Light'
+                })
+
+                let start = this.add.text(0, 280, 'Game Start', {color: '#000'});
+                let load = this.add.text(0, 320, 'Load Game', {color: '#000'});
+                let option = this.add.text(0, 360, 'Options', {color: '#000'});
+                let credit = this.add.text(0, 400, 'Credits', {color: '#000'});
+                let end = this.add.text(0, 440, 'Quit Game', {color: '#000'});
+                let progress = this.add.text(-100, 440, 'Current Progress: 48%', {color: '#000', fontSize: '14px'});
+
+                let rock = this.add.circle(125, 420, 20, 0x000000);
+                let hill = this.add.rectangle(100, 340, 15, 200, 0x000000);
+                
+                this.tweens.add({
+                    targets: start,
+                    x: 200,
+                    y: 280,
+                    duration: 500,
+                    ease: 'Linear',
+                });
+                this.time.delayedCall(100, () => {
+                    this.tweens.add({
+                        targets: load,
+                        x: 200,
+                        y: 320,
+                        duration: 500,
+                        ease: 'Linear',
+                    })
+                })
+                this.time.delayedCall(200, () => {
+                    this.tweens.add({
+                        targets: option,
+                        x: 200,
+                        y: 360,
+                        duration: 500,
+                        ease: 'Linear',
+                    });
+                })
+                this.time.delayedCall(300, () => {
+                    this.tweens.add({
+                        targets: credit,
+                        x: 200,
+                        y: 400,
+                        duration: 500,
+                        ease: 'Linear',
+                    });
+                })
+                this.time.delayedCall(400, () => {
+                    this.tweens.add({
+                        targets: end,
+                        x: 200,
+                        y: 440,
+                        duration: 500,
+                        ease: 'Linear',
+                    });
+                })
+                this.time.delayedCall(500, () => {
+                    this.tweens.add({
+                        targets: rock,
+                        x: 125,
+                        y: 340,
+                        duration: 500,
+                        ease: 'Linear',
+                    })
+                })
+                this.time.delayedCall(600, () => {
+                    this.tweens.add({
+                        targets: progress,
+                        x: 10,
+                        y: 440,
+                        duration: 500,
+                        ease: 'Linear',
+                    })
+                })
+
+
+
+                // this.cameras.main.once('camerafadeincomplete', function (camera) {camera.fadeOut(3);});
+                // this.cameras.main.fadeIn(3);
+                // this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+		        //     this.scene.start('warning')
+	            // })
+                //this.input.on('pointerdown', () => this.scene.start('body'));
+            }
+        }
+
+        new Phaser.Game({
+            width: 640,
+            height: 480,
+            scene: [Studio, Warning, Menu],
+        });
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
